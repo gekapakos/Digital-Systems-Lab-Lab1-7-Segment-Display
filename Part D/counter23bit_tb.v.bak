@@ -1,0 +1,31 @@
+`timescale 1ns / 1ps
+
+module counter23bit_tb;  
+  reg clk;                     // Declare an internal TB variable called clk to drive clock to the design  
+  reg reset;                    // Declare an internal TB variable called rstn to drive active low reset to design  
+  wire enable;              // Declare a wire to connect to design output  
+  
+  // Instantiate counter design and connect with Testbench variables  
+  counter23bit   c0 ( .clk (clk),  
+                 .reset (reset),  
+                 .enable (enable));  
+  
+  // Generate a clock that should be driven to design  
+  // This clock will flip its value every 5ns -> time period = 10ns -> freq = 100 MHz  
+   
+ always #100 clk = ~clk;  
+  
+  // This initial block forms the stimulus of the testbench  
+  initial begin  
+    // Initialize testbench variables to 0 at start of simulation  
+    clk = 1'b0;  
+    reset = 1'b0;  
+  
+    // Drive rest of the stimulus, reset is asserted in between  
+    #200   reset = 1;  
+    #200   reset = 0;  
+  
+    // Finish the stimulus after 200ns  
+    #6000 $finish;  
+  end  
+endmodule  
